@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { Usuario } from '../types/usuario'
-import { getUsuarios, createUsuario, updateUsuario, deleteUsuario } from '../api/usuarios'
+import { getUsuarios, createUsuario } from '../api/usuarios'
 
 export const useUsuarioStore = defineStore('usuarios', () => {
   const usuarios = ref<Usuario[]>([])
@@ -33,30 +33,32 @@ export const useUsuarioStore = defineStore('usuarios', () => {
     }
   }
 
-  async function editUsuario(id: number, usuario: Partial<Usuario>) {
-    loading.value = true
-    try {
-      const actualizado = await updateUsuario(id, usuario)
-      const index = usuarios.value.findIndex(u => u.id === id)
-      if (index !== -1) usuarios.value[index] = actualizado
-    } catch (e: any) {
-      error.value = e.response?.data?.error || 'Error al actualizar usuario'
-    } finally {
-      loading.value = false
-    }
-  }
+  // async function editUsuario(id: number, usuario: Partial<Usuario>) {
+  //   loading.value = true
+  //   try {
+  //     const actualizado = await updateUsuario(id, usuario)
+  //     const index = usuarios.value.findIndex(u => u.id === id)
+  //     if (index !== -1) usuarios.value[index] = actualizado
+  //   } catch (e: any) {
+  //     error.value = e.response?.data?.error || 'Error al actualizar usuario'
+  //   } finally {
+  //     loading.value = false
+  //   }
+  // }
 
-  async function removeUsuario(id: number) {
-    loading.value = true
-    try {
-      await deleteUsuario(id)
-      usuarios.value = usuarios.value.filter(u => u.id !== id)
-    } catch (e: any) {
-      error.value = e.response?.data?.error || 'Error al eliminar usuario'
-    } finally {
-      loading.value = false
-    }
-  }
+  // async function removeUsuario(id: number) {
+  //   loading.value = true
+  //   try {
+  //     await deleteUsuario(id)
+  //     usuarios.value = usuarios.value.filter(u => u.id !== id)
+  //   } catch (e: any) {
+  //     error.value = e.response?.data?.error || 'Error al eliminar usuario'
+  //   } finally {
+  //     loading.value = false
+  //   }
+  // }
 
-  return { usuarios, loading, error, fetchUsuarios, addUsuario, editUsuario, removeUsuario }
+  return { usuarios, loading, error, fetchUsuarios, addUsuario, 
+    // editUsuario, removeUsuario 
+  }
 })
