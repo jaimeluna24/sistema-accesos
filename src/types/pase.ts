@@ -32,3 +32,7 @@ export interface PaseData {
     dni: string
 }
 
+export interface PaseResponse {
+  nuevoPase: PaseData
+  message: string
+}

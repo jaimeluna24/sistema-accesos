@@ -22,12 +22,16 @@ const telefono = ref('')
 const motivo = ref('')
 const tipo_pase_id = ref(null)
 const duracion = ref(1)
-const duracion_unidad = ref('Día')
+const duracion_unidad = ref('dias')
 const dni = ref('')
 const paseStore = usePaseStore();
 
 const loading = ref(false)
 const errorMsg = ref<string | null>(null)
+
+const snackbar = ref(false)
+const text = ref('My timeout is set to 2000.')
+const timeout = ref(4000)
 
 onMounted(async () => {
   await paseStore.fetchPases()
@@ -53,10 +57,14 @@ const generarPase = async () => {
     duracion_unidad: duracion_unidad.value,
     dni: dni.value
   }
-  console.log(dataPase)
 
   try {
-    await paseStore.addPase(dataPase)
+    const result = await paseStore.addPase(dataPase)
+    if (result!.success) {
+      text.value = 'Pase creado exitosamente'
+      snackbar.value = true
+    }
+
   } catch (e: any) {
     console.log('error completo:', e)
     console.log('error response:', e.response)
@@ -80,7 +88,6 @@ const headers = [
   { title: 'Estado', key: 'status' },
   { title: 'Fecha de Creación', key: 'created_at' },
 
-  // columna que NO existe en los datos
   { title: 'Acciones', key: 'actions', sortable: false }
 ]
 
@@ -186,11 +193,7 @@ function mostrarQr(id: number) {
         </v-card-title>
 
         <v-divider></v-divider>
-        <v-data-table 
-        v-model:search="search" 
-        :items="paseStore.pases"
-        :loading="paseStore.loading"
-        :headers="headers">
+        <v-data-table v-model:search="search" :items="paseStore.pases" :loading="paseStore.loading" :headers="headers">
 
           <template v-slot:item.status="{ item }">
             <div class="text-start">
@@ -218,8 +221,18 @@ function mostrarQr(id: number) {
       </v-card>
 
     </div>
+    <v-snackbar location="bottom end" color="success" prepended-icon="$success" title="Exito" v-model="snackbar" :timeout="timeout">
+      {{ text }}
+
+      <template v-slot:actions>
+        <v-btn color="white" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 
   </div>
+
 
 </template>
 

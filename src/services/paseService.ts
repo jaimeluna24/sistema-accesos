@@ -1,43 +1,45 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { Pase, PaseData } from '../types/pase'
-import { createPase, getPases } from '../api/pase'
+  import { defineStore } from 'pinia'
+  import { ref } from 'vue'
+  import type { Pase, PaseData, PaseResponse } from '../types/pase'
+  import { createPase, getPases } from '../api/pase'
 
-export const usePaseStore = defineStore('pases', () => {
-  const dataPases = ref<PaseData[]>([])
-  const pases = ref<Pase[]>([])
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+  export const usePaseStore = defineStore('pases', () => {
+    const dataPases = ref<PaseData[]>([])
+    const pases = ref<Pase[]>([])
+    const loading = ref(false)
+    const error = ref<string | null>(null)
 
-  async function fetchPases() {
-    loading.value = true
-    error.value = null
-    try {
-      pases.value = await getPases()
-      console.log(pases.value)
-    } catch (e: any) {
-      error.value = e.response?.data?.error || 'Error al obtener pases'
-    } finally {
-      loading.value = false
+    async function fetchPases() {
+      loading.value = true
+      error.value = null
+      try {
+        pases.value = await getPases()
+        console.log('aqui', pases)
+      } catch (e: any) {
+        error.value = e.response?.data?.error || 'Error al obtener pases'
+      } finally {
+        loading.value = false
+      }
     }
-  }
 
 
-  async function addPase(pase: PaseData) {
+    async function addPase(pase: PaseData) {
     loading.value = true
     try {
-      const nuevo = await createPase(pase)
-      dataPases.value.push(nuevo)
+      const nuevo: PaseResponse = await createPase(pase)
+      dataPases.value.push(nuevo.nuevoPase)
+      return { success: true, message: nuevo.message }
     } catch (e: any) {
       error.value = e.response?.data?.error || 'Error al crear el pase'
+      console.log('error:', error.value)
+      return { success: false, message: error.value }
     } finally {
       loading.value = false
     }
   }
 
-
-  return {
-    loading, error, addPase, fetchPases, pases
-    // editUsuario, removeUsuario 
-  }
-})
+    return {
+      loading, error, addPase, fetchPases, pases, dataPases
+      // editUsuario, removeUsuario 
+    }
+  })
