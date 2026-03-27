@@ -106,9 +106,11 @@ console.log(smAndDown)
 
 const qrDialog = ref(false)
 const paseSeleccionado = ref<number | null>(null)
+const codigoSeleccionado = ref<string | null>(null)
 
-function mostrarQr(id: number) {
+function mostrarQr(id: number, codigo: string) {
   paseSeleccionado.value = id
+  codigoSeleccionado.value = codigo
   qrDialog.value = true
   console.log('Ejecutando')
 }
@@ -213,7 +215,7 @@ function mostrarQr(id: number) {
 
               <v-btn icon="mdi-delete" size="small" color="red" />
 
-              <v-btn icon="mdi-qrcode" size="small" color="black" @click="mostrarQr(item.id)" />
+              <v-btn icon="mdi-qrcode" size="small" color="black" @click="mostrarQr(item.id, item.codigo)" />
             </div>
           </template>
 
@@ -232,7 +234,7 @@ function mostrarQr(id: number) {
     </v-snackbar>
 
   </div>
-
+<QrModal v-model="qrDialog" :pase-id="paseSeleccionado" :codigo="codigoSeleccionado" />
 
 </template>
 

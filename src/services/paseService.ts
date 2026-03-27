@@ -1,11 +1,12 @@
   import { defineStore } from 'pinia'
   import { ref } from 'vue'
   import type { Pase, PaseData, PaseResponse } from '../types/pase'
-  import { createPase, getPases } from '../api/pase'
+  import { createPase, getPases, detailPase } from '../api/pase'
 
   export const usePaseStore = defineStore('pases', () => {
     const dataPases = ref<PaseData[]>([])
     const pases = ref<Pase[]>([])
+    const paseDetalle = ref<Pase | null>(null)
     const loading = ref(false)
     const error = ref<string | null>(null)
 
@@ -38,8 +39,20 @@
     }
   }
 
+    async function fetchPase(id: string) {
+      loading.value = true
+      error.value = null
+      try {
+        paseDetalle.value = await detailPase(id)
+      } catch (e: any) {
+        error.value = e.response?.data?.error || 'Error al obtener el pase'
+      } finally {
+        loading.value = false
+      }
+    }
+
     return {
-      loading, error, addPase, fetchPases, pases, dataPases
+      loading, error, addPase, fetchPases, pases, dataPases, fetchPase, paseDetalle
       // editUsuario, removeUsuario 
     }
   })

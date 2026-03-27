@@ -8,6 +8,7 @@ import GenerarPase from "../views/pase/GenerarPase.vue"
 import EscanearPase from "../views/pase/EscanearPase.vue"
 import Login from "../views/auth/Login.vue"
 import Usuarios from "../views/usuarios/Usuarios.vue"
+import DetallePase from "../views/pase/DetallePase.vue"
 import { useAuthStore } from '../services/authService'
 
 const routes = [
@@ -31,6 +32,16 @@ const routes = [
         path: "escanear-pase",
         name: "EscanearPase",
         component: EscanearPase
+      },
+      {
+        path: "escanear-pase",
+        name: "EscanearPase",
+        component: EscanearPase
+      },
+      {
+        path: "detalle-pase/:id",
+        name: "DetallePase",
+        component: DetallePase
       },
       {
         path: "usuarios",
