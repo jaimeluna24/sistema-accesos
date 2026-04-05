@@ -15,7 +15,6 @@
       error.value = null
       try {
         pases.value = await getPases()
-        console.log('aqui', pases)
       } catch (e: any) {
         error.value = e.response?.data?.error || 'Error al obtener pases'
       } finally {
@@ -32,7 +31,6 @@
       return { success: true, message: nuevo.message }
     } catch (e: any) {
       error.value = e.response?.data?.error || 'Error al crear el pase'
-      console.log('error:', error.value)
       return { success: false, message: error.value }
     } finally {
       loading.value = false

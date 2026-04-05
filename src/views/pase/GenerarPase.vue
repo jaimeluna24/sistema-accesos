@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useDisplay } from 'vuetify'
 import { type PaseData } from '../../types/pase'
 import { VForm } from 'vuetify/components'
@@ -30,8 +30,11 @@ const loading = ref(false)
 const errorMsg = ref<string | null>(null)
 
 const snackbar = ref(false)
-const text = ref('My timeout is set to 2000.')
+const text = ref('')
 const timeout = ref(4000)
+const typeAlert = ref('')
+const typeIconAlert = ref('')
+const titleAlert = ref('')
 
 onMounted(async () => {
   await paseStore.fetchPases()
@@ -62,11 +65,14 @@ const generarPase = async () => {
     const result = await paseStore.addPase(dataPase)
     if (result!.success) {
       text.value = 'Pase creado exitosamente'
+      titleAlert.value = 'Éxito'
+      typeAlert.value = 'success'
+      typeIconAlert.value = '$success'
       snackbar.value = true
+      dialog.value = false
+      await paseStore.fetchPases()
     }
-
   } catch (e: any) {
-    console.log('error completo:', e)
     console.log('error response:', e.response)
     errorMsg.value = e.response?.data?.message || 'Error al crear el pase'
   } finally {
@@ -80,13 +86,28 @@ const cancelar = () => {
   dialog.value = false
 }
 
+const formatearFecha = (fecha: string): string => {
+  return new Date(fecha).toLocaleString('es-HN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  })
+}
+
 const headers = [
   { title: 'Codigo', key: 'codigo' },
   { title: 'Nombre', key: 'nombre_visitante' },
   { title: 'Apellido', key: 'apellido_visitante' },
   { title: 'Tipo de Pase', key: 'tipo_pase.nombre_pase' },
   { title: 'Estado', key: 'status' },
-  { title: 'Fecha de Creación', key: 'created_at' },
+  {
+    title: 'Fecha y Hora',
+    key: 'fecha',
+    value: (item: any) => formatearFecha(item.created_at)
+  },
 
   { title: 'Acciones', key: 'actions', sortable: false }
 ]
@@ -102,24 +123,36 @@ const tipo_pases = [
   }
 ]
 
-console.log(smAndDown)
-
 const qrDialog = ref(false)
-const paseSeleccionado = ref<number | null>(null)
+const paseSeleccionado = ref<string | null>(null)
 const codigoSeleccionado = ref<string | null>(null)
 
-function mostrarQr(id: number, codigo: string) {
+function mostrarQr(id: string, codigo: string) {
   paseSeleccionado.value = id
   codigoSeleccionado.value = codigo
   qrDialog.value = true
-  console.log('Ejecutando')
 }
+
+const paginaActual = ref(1)
+const porPagina = 10
+
+const totalPaginas = computed(() => Math.ceil(paseStore.pases.length / porPagina))
+
+const pasesPaginados = computed(() => {
+  const inicio = (paginaActual.value - 1) * porPagina
+  return paseStore.pases.slice(inicio, inicio + porPagina)
+})
 </script>
 
 <template>
   <div class="d-flex justify-space-between p-20">
-    <div>
-      <h1>Generar Pase</h1>
+    <div style="padding: 12px 16px; margin-top: 15px;">
+      <h1 style="font-size: clamp(18px, 4vw, 26px); font-weight: 500; margin: 0 0 4px;">
+        Listado de Pases
+      </h1>
+      <p style="color: grey; margin: 0; font-size: 14px;">
+        Historial de pases creados
+      </p>
     </div>
     <div class="d-flex justify-center align-center">
       <v-btn prepend-icon="mdi-qrcode" @click="dialog = true">
@@ -176,11 +209,31 @@ function mostrarQr(id: number, codigo: string) {
     </v-dialog>
   </div>
   <div>
-    <div v-if="smAndDown">
-      <v-list lines="one">
-        <v-list-item v-for="n in 3" :key="n" :title="'Item ' + n"
-          subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit"></v-list-item>
-      </v-list>
+    <div v-if="smAndDown" style="padding: 8px;">
+      <div v-for="pase in pasesPaginados" :key="pase.id"
+        style=" border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;">
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <span style="font-size: 15px; font-weight: 500;">{{ pase.codigo }}</span>
+            <p style="font-size: 13px; color: #666; margin: 2px 0 0;">
+              {{ pase.nombre_visitante }} {{ pase.apellido_visitante }}
+            </p>
+          </div>
+          <v-chip :color="pase.status ? 'success' : 'default'" size="small" label>
+            {{ pase.status ? 'Activo' : 'Inactivo' }}
+          </v-chip>
+        </div>
+
+        <div style="display: flex; justify-content: space-around; gap: 8px; margin-top: 10px;">
+          <v-btn prepend-icon="mdi-information-slab-box" variant="outlined" color="warning" size="small" flex>Ver
+            detalles</v-btn>
+          <v-btn prepend-icon="mdi-qrcode" variant="outlined" color="info" size="small" flex
+            @click="mostrarQr(pase.id, pase.codigo)">Ver Código QR</v-btn>
+        </div>
+      </div>
+
+      <v-pagination v-model="paginaActual" :length="totalPaginas" density="compact" />
     </div>
     <div v-else>
       <v-card flat>
@@ -214,27 +267,25 @@ function mostrarQr(id: number, codigo: string) {
                              /> -->
 
               <v-btn icon="mdi-delete" size="small" color="red" />
-
               <v-btn icon="mdi-qrcode" size="small" color="black" @click="mostrarQr(item.id, item.codigo)" />
             </div>
           </template>
-
         </v-data-table>
       </v-card>
-
     </div>
-    <v-snackbar location="bottom end" color="success" prepended-icon="$success" title="Exito" v-model="snackbar" :timeout="timeout">
+    <v-snackbar location="bottom end" :color="typeAlert" :prepended-icon="typeIconAlert" :title="titleAlert"
+      v-model="snackbar" :timeout="timeout">
       {{ text }}
 
       <template v-slot:actions>
         <v-btn color="white" variant="text" @click="snackbar = false">
-          Close
+          Cerrar
         </v-btn>
       </template>
     </v-snackbar>
 
   </div>
-<QrModal v-model="qrDialog" :pase-id="paseSeleccionado" :codigo="codigoSeleccionado" />
+  <QrModal v-model="qrDialog" :pase-id="paseSeleccionado" :codigo="codigoSeleccionado" />
 
 </template>
 

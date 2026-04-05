@@ -1,16 +1,15 @@
 import api from '../api/index'
-import type { Usuario } from '../types/usuario'
+import type { Usuario, UsuarioData, UsuarioResponse } from '../types/usuario'
 
 export const getUsuarios = async (): Promise<Usuario[]> => {
   const { data } = await api.get<Usuario[]>('auth/usuarios')
   return data
 }
 
-export const createUsuario = async (usuario: Omit<Usuario, 'id' | 'roles' | 'departamento'>): Promise<Usuario> => {
-  const { data } = await api.post<Usuario>('auth/usuarios', usuario)
+export const createUsuario = async (usuario: UsuarioData): Promise<UsuarioResponse> => {
+  const { data } = await api.post<UsuarioResponse>('auth/usuarios', usuario)
   return data
 }
-
 // export const updateUsuario = async (id: number, usuario: Partial<Usuario>): Promise<Usuario> => {
 //   const { data } = await api.put<Usuario>(`/usuarios/${id}`, usuario)
 //   return data

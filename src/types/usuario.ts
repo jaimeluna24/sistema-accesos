@@ -16,4 +16,17 @@ export interface Usuario {
   activo: boolean
   roles: Rol
   departamento: Departamento
+  created_at: string
+}
+
+export interface UsuarioData {
+  nombre_usuario: string
+  contrasenia: string
+  rol_id: number
+  depto_id: number
+}
+
+export interface UsuarioResponse {
+  nuevoUsuario: UsuarioData
+  message: string
 }

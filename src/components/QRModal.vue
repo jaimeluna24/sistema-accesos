@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 import QRCode from 'qrcode'
 
 const props = defineProps<{
-  paseId: number | null
+  paseId: string | null
   codigo: string | null
   modelValue: boolean
 }>()

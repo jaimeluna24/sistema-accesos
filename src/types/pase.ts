@@ -4,7 +4,7 @@ export interface TipoPase {
 }
 
 export interface Pase {
-    id: number
+    id: string
     codigo: string
     nombre_visitante: string
     apellido_visitante: string

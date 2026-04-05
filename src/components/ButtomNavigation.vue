@@ -50,6 +50,12 @@
     </v-bottom-navigation>
 </template>
 
+<style scope>
+  .margenes {
+
+  }
+</style>
+
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'

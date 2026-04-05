@@ -28,9 +28,7 @@ async function login() {
 
   try {
     await auth.login(credentials)
-    console.log("login exitoso")
   } catch (e: any) {
-    console.log('error completo:', e)
   console.log('error response:', e.response)
     errorMsg.value = e.response?.data?.message || 'Credenciales inválidas'
   } finally {
