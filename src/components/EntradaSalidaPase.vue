@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useUbicacionStore } from '../services/ubicacionService';
 import { VForm } from 'vuetify/components'
 import { type DataRegistro } from '../types/registros'

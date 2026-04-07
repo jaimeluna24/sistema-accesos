@@ -44,7 +44,7 @@ onMounted(async () => {
     controls = await codeReader.decodeFromConstraints(
       { video: { facingMode: 'environment' } },
       videoRef.value!,
-      async (result, error) => {
+      async (result) => {
         if (result) {
           detener()
 

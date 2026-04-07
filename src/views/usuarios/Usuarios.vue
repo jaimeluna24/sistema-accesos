@@ -224,7 +224,7 @@ const usuariosPaginados = computed(() => {
             </div>
           </template>
 
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:item.actions="{  }">
             <div class="d-flex gap-4">
               <v-btn prepend-icon="mdi-information-slab-box" variant="outlined" color="warning" size="small" flex>Ver
                 detalles</v-btn>

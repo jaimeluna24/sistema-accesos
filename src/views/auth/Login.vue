@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useAuthStore } from '../../services/authService'
 import type { LoginCredentials } from '../../types/auth'
 
