@@ -8,6 +8,8 @@ export interface AuthUser {
   nombre_usuario: string
   rol_id: number
   depto_id: number
+  rol: string
+  departamento: string
 }
 
 export interface AuthResponse {

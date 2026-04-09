@@ -1,55 +1,60 @@
-import { createRouter, createWebHistory } from "vue-router"
-
+import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router"
 import MainLayout from "../layouts/MainLayout.vue"
 import AuthLayout from "../layouts/AuthLayout.vue"
-
 import Dashboard from "../views/dashboard/Dashboard.vue"
 import GenerarPase from "../views/pase/GenerarPase.vue"
 import EscanearPase from "../views/pase/EscanearPase.vue"
 import Login from "../views/auth/Login.vue"
 import Usuarios from "../views/usuarios/Usuarios.vue"
 import DetallePase from "../views/pase/DetallePase.vue"
+import SinPermisos from "../views/auth/SinPermisos.vue"
 
-const routes = [
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAuth?: boolean
+    roles?: ('administrador' | 'guardia' | 'lector' | 'gestor' | 'normal')[]
+  }
+}
+
+const routes: RouteRecordRaw[] = [
   {
     path: "/",
     component: MainLayout,
-        meta: { requiresAuth: true },
-
+    meta: { requiresAuth: true },
     children: [
       {
-        path: "/dashboard",
+        path: "dashboard",
         name: "Dashboard",
         component: Dashboard,
+        meta: { roles: ['administrador', 'guardia', 'lector'] }
       },
       {
         path: "generar-pase",
         name: "GenerarPase",
-        component: GenerarPase
+        component: GenerarPase,
+        meta: { roles: ['administrador', 'lector', 'gestor', 'normal'] }
       },
       {
         path: "escanear-pase",
         name: "EscanearPase",
-        component: EscanearPase
-      },
-      {
-        path: "escanear-pase",
-        name: "EscanearPase",
-        component: EscanearPase
+        component: EscanearPase,
+        meta: { roles: ['administrador', 'guardia'] }
       },
       {
         path: "detalle-pase/:id",
         name: "DetallePase",
-        component: DetallePase
+        component: DetallePase,
+        meta: { roles: ['administrador', 'guardia', 'lector', 'gestor', 'normal'] }
       },
       {
         path: "usuarios",
         name: "Usuarios",
-        component: Usuarios
+        component: Usuarios,
+        meta: { roles: ['administrador'] }
       }
     ]
   },
-
+ 
   {
     path: "/auth",
     component: AuthLayout,
@@ -58,9 +63,19 @@ const routes = [
         path: "login",
         name: "login",
         component: Login
+      },
+      {
+        path: "sin-permisos",
+        name: "NoAutorizado",
+        component: SinPermisos
       }
     ]
-  }
+  },
+   {
+  path: "/:pathMatch(.*)*",
+  name: "NotFound",
+  component: () => import("../views/NotFound.vue")
+}
 ]
 
 const router = createRouter({
@@ -68,24 +83,23 @@ const router = createRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
+router.beforeEach((to, from, next) => {
+  const userRaw = localStorage.getItem("user")
+  const isAuthenticated = !!userRaw
 
-//   const isAuthenticated = localStorage.getItem("user")
-
-//   if (to.name !== "login" && !isAuthenticated) {
-//     next({ name: "login" })
-//   } else {
-//     next()
-//   }
-
-// })
-
-router.beforeEach((to) => {
-  const token = localStorage.getItem('token')
-  if (to.meta.requiresAuth && !token) {
-    return '/auth/login'
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return next({ name: "login" })
   }
-})
 
+  const rolesPermitidos = to.meta?.roles
+  if (rolesPermitidos && rolesPermitidos.length > 0 && userRaw) {
+    const user = JSON.parse(userRaw)
+    if (!rolesPermitidos.includes(user.rol)) {
+      return next({ name: "NoAutorizado" })
+    }
+  }
+
+  next()
+})
 
 export default router

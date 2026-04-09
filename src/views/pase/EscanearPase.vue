@@ -57,7 +57,8 @@ onMounted(async () => {
             const dominiosValidos = [
               'localhost',
               'tuapp.ngrok.io',
-              '192.168.1.47'
+              '192.168.1.47',
+              'sistemoon.duckdns.org'
             ]
 
             if (!dominiosValidos.includes(url.hostname)) {
