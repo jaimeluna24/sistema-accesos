@@ -32,6 +32,12 @@ const { smAndDown } = useDisplay()
           
           <v-btn :to="{ name: 'Dashboard' }" value="Dashboard" exact
             :color="$route.name === 'Dashboard' ? 'primary' : ''" v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'">
+            <v-icon>mdi-chart-bar-stacked</v-icon>
+            <span>Dashboard</span>
+          </v-btn>
+
+          <v-btn :to="{ name: 'Registros' }" value="Registros" exact
+            :color="$route.name === 'Registros' ? 'primary' : ''" v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'">
             <v-icon>mdi-history</v-icon>
             <span>Registros</span>
           </v-btn>

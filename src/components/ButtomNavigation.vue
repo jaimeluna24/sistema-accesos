@@ -4,10 +4,20 @@
       grow
       app
     >
-      <!-- Registros -->
+    <!-- Dashboard -->
       <v-btn
         :to="{ name: 'Dashboard' }"
         value="Dashboard"
+        icon
+         exact
+      >
+        <v-icon>mdi-chart-bar-stacked</v-icon>
+        <span>Dashboard</span>
+      </v-btn>
+      <!-- Registros -->
+      <v-btn
+        :to="{ name: 'Registros' }"
+        value="Registros"
         icon
          exact
       >
@@ -50,11 +60,6 @@
     </v-bottom-navigation>
 </template>
 
-<style scope>
-  .margenes {
-
-  }
-</style>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'

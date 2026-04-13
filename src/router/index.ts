@@ -8,6 +8,16 @@ import Login from "../views/auth/Login.vue"
 import Usuarios from "../views/usuarios/Usuarios.vue"
 import DetallePase from "../views/pase/DetallePase.vue"
 import SinPermisos from "../views/auth/SinPermisos.vue"
+import Registros from "../views/registros/Registros.vue"
+
+import { useAuthStore } from "../services/authService"
+const RUTA_POR_ROL: Record<string, string> = {
+  administrador: '/dashboard',
+  lector:        '/dashboard',
+  gestor:        '/dashboard',
+  normal:        '/dashboard',
+  guardia:       '/escanear-pase',
+}
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -26,6 +36,12 @@ const routes: RouteRecordRaw[] = [
         path: "dashboard",
         name: "Dashboard",
         component: Dashboard,
+        meta: { roles: ['administrador', 'guardia', 'lector'] }
+      },
+      {
+        path: "registros",
+        name: "Registros",
+        component: Registros,
         meta: { roles: ['administrador', 'guardia', 'lector'] }
       },
       {
@@ -83,9 +99,23 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const userRaw = localStorage.getItem("user")
   const isAuthenticated = !!userRaw
+  const auth = useAuthStore()
+
+  if (auth.isAuthenticated && to.path === '/') {
+    if (userRaw) {
+      const user = JSON.parse(userRaw)
+      const rol = user.rol.toLocaleLowerCase()
+      const ruta = RUTA_POR_ROL[rol] ?? '/no-autorizado'
+      return next(ruta)
+    }
+  } else if (!auth.isAuthenticated && to.meta.requiresAuth) {
+    next('/auth/login')
+  } else {
+    next()
+  }
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     return next({ name: "login" })

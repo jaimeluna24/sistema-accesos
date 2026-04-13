@@ -35,9 +35,4 @@ function logout() {
 
 const usuario = JSON.parse(localStorage.getItem('user') || '{}')
 
-const user = {
-    initials: 'JD',
-    fullName: 'John Doe',
-    email: 'john.doe@doe.com',
-}
 </script>

@@ -1,13 +1,21 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import router from '../router'
 import { login as loginApi } from '../api/auth'
 import type { LoginCredentials, AuthUser } from '../types/auth'
+
+const RUTA_POR_ROL: Record<string, string> = {
+  administrador: '/dashboard',
+  lector:        '/dashboard',
+  gestor:        '/dashboard',
+  normal:        '/dashboard',
+  guardia:       '/escanear-pase',
+}
+
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem('token'))
   const user  = ref<AuthUser | null>(JSON.parse(localStorage.getItem('user') || 'null'))
-  const router = useRouter()
 
   const isAuthenticated = computed(() => !!token.value)
 
@@ -17,7 +25,10 @@ export const useAuthStore = defineStore('auth', () => {
     user.value  = data.user
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
-    router.push('/dashboard')
+
+    const rol = data.user?.rol.toLocaleLowerCase()
+    const ruta = RUTA_POR_ROL[rol] ?? '/no-autorizado'
+    router.push(ruta)
   }
 
   function logout() {
