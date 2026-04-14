@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useDisplay } from 'vuetify'
 import UsuarioMenu from './UsuarioMenu.vue'
+import logo from '../assets/LogoACHNormal.png'
 
 const active = ref('Dashboard')
 const route = useRoute()
@@ -20,57 +21,62 @@ const { smAndDown } = useDisplay()
 </script>
 
 <template>
-  <v-app-bar :elevation="5">
+  <v-app-bar :elevation="1">
     <template v-slot:default>
-      <div style="display: flex; align-items: center; width: 100%;">
+      <div :style="{
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: smAndDown ? 'space-between' : 'center'
+  }">
 
-        <!-- Título izquierda -->
-        <span style="font-weight: 700; font-size: 20px; min-width: 100px; padding-left: 15px;">Accesos</span>
-
+        <!-- Logo izquierda -->
+        <v-img class="mx-4 my-6" max-width="160" :src="logo" />
         <!-- Botones centrados -->
         <div v-if="!smAndDown" style="flex: 1; display: flex; justify-content: center; gap: 4px; align-items: center;">
-          
+
           <v-btn :to="{ name: 'Dashboard' }" value="Dashboard" exact
-            :color="$route.name === 'Dashboard' ? 'primary' : ''" v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'">
+            :color="$route.name === 'Dashboard' ? 'primary' : ''"
+            v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'">
             <v-icon>mdi-chart-bar-stacked</v-icon>
             <span>Dashboard</span>
           </v-btn>
 
           <v-btn :to="{ name: 'Registros' }" value="Registros" exact
-            :color="$route.name === 'Registros' ? 'primary' : ''" v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'">
+            :color="$route.name === 'Registros' ? 'primary' : ''"
+            v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'">
             <v-icon>mdi-history</v-icon>
             <span>Registros</span>
           </v-btn>
 
           <!-- Escanear QR -->
           <v-btn :to="{ name: 'EscanearPase' }" value="EscanearPase"
-            :color="$route.name === 'EscanearPase' ? 'primary' : ''" exact v-if="usuario.rol == 'administrador' || usuario.rol == 'guardia'">
+            :color="$route.name === 'EscanearPase' ? 'primary' : ''" exact
+            v-if="usuario.rol == 'administrador' || usuario.rol == 'guardia'">
             <v-icon>mdi-qrcode-scan</v-icon>
             <span>Escanear</span>
           </v-btn>
 
           <!-- Generar Pase -->
           <v-btn :to="{ name: 'GenerarPase' }" value="GenerarPase"
-            :color="$route.name === 'GenerarPase' ? 'primary' : ''" exact v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor' || usuario.rol== 'normal'">
+            :color="$route.name === 'GenerarPase' ? 'primary' : ''" exact
+            v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor' || usuario.rol == 'normal'">
             <v-icon>mdi-qrcode</v-icon>
             <span>Generar Pase</span>
           </v-btn>
 
           <!-- Usuarios -->
-          <v-btn :to="{ name: 'Usuarios' }" value="Usuarios" :color="$route.name === 'Usuarios' ? 'primary' : ''" exact v-if="usuario.rol == 'administrador'">
+          <v-btn :to="{ name: 'Usuarios' }" value="Usuarios" :color="$route.name === 'Usuarios' ? 'primary' : ''" exact
+            v-if="usuario.rol == 'administrador'">
             <v-icon>mdi-account-group</v-icon>
             <span>Usuarios</span>
           </v-btn>
         </div>
-
-        <!-- Botón derecha -->
-
-
       </div>
     </template>
     <template v-slot:append>
-  <usuario-menu />
-</template>
+      <usuario-menu />
+    </template>
   </v-app-bar>
 </template>
 

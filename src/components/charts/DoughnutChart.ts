@@ -9,10 +9,8 @@ export interface AccessData {
 
 // Datos simulados (esto vendrá de tu API después)
 export const rawAccessData: AccessData[] = [
-  { label: 'Entrada principal', count: 120, color: '#41B883' },
-  { label: 'Entrada lateral',    count: 45,  color: '#00D8FF' },
-  { label: 'Acceso VIP',          count: 30,  color: '#E46651' },
-  { label: 'Salida emergencia',   count: 8,   color: '#DD1B16' },
+  { label: 'Entradas', count: 120, color: '#0a873f' },
+  { label: 'Salidas',    count: 45,  color: '#FF5252' },
 ]
 
 // Función que convierte tu data cruda al formato de Chart.js

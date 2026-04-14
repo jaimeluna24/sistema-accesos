@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useAuthStore } from '../../services/authService'
 import type { LoginCredentials } from '../../types/auth'
-
+import logo from '../../assets/LogoACHNormal.png'
 const visible = ref(false)
 const auth = useAuthStore()
 
@@ -41,8 +41,8 @@ async function login() {
 <template>
   <div>
 
-    <v-img class="mx-auto my-6" max-width="228"
-      src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg" />
+    <v-img class="mx-auto my-6" max-width="250"
+      :src="logo" />
 
     <v-card class="mx-auto pa-12 pb-8" elevation="3" max-width="448" min-width="350" width="400" rounded="lg">
 

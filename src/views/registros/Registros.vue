@@ -56,9 +56,9 @@ const registrosPaginados = computed(() => {
 <template>
   <div class="d-flex justify-space-between p-20">
     <div style="padding: 12px 16px; margin-top: 15px;">
-      <h1 style="font-size: clamp(18px, 4vw, 26px); font-weight: 500; margin: 0 0 4px;">
+      <!-- <h1 style="font-size: clamp(18px, 4vw, 26px); font-weight: 500; margin: 0 0 4px;">
         Registros
-      </h1>
+      </h1> -->
     </div>
   </div>
   <div>

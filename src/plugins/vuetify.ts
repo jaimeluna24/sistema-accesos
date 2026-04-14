@@ -1,7 +1,16 @@
 // src/plugins/vuetify.ts
-import 'vuetify/styles' // estilos base
 import { createVuetify } from 'vuetify'
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+
+const getSavedTheme = () => {
+  try {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'light' || stored === 'dark') return stored
+    return 'light'
+  } catch (e) {
+    return 'light'
+  }
+}
 
 export default createVuetify({
   icons: {
@@ -10,6 +19,21 @@ export default createVuetify({
     sets: { mdi },
   },
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: getSavedTheme(),
+    variations: {
+      colors: [],
+      lighten: 0,
+      darken: 0,
+    },
+    themes: {
+      light: {
+        dark: false,  
+        colors: {}
+      },
+      dark: {
+        dark: true,  
+        colors: {}
+      }
+    }
   },
 })

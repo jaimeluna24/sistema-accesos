@@ -19,6 +19,10 @@
                     <v-divider class="my-3"></v-divider>
                     <v-btn variant="text" rounded @click="logout()">Cerrar Sesión</v-btn>
                 </div>
+                <div style="display: flex; justify-content: center;">
+                    <ModoOscuro />
+                </div>
+
             </v-card-text>
         </v-card>
     </v-menu>
@@ -26,6 +30,7 @@
 <script setup>
 
 import { useAuthStore } from '../services/authService'
+import ModoOscuro from './DarkMode.vue'
 
 const auth = useAuthStore()
 

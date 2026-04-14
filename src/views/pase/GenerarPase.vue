@@ -147,12 +147,12 @@ const pasesPaginados = computed(() => {
 <template>
   <div class="d-flex justify-space-between p-20">
     <div style="padding: 12px 16px; margin-top: 15px;">
-      <h1 style="font-size: clamp(18px, 4vw, 26px); font-weight: 500; margin: 0 0 4px;">
+      <!-- <h1 style="font-size: clamp(18px, 4vw, 26px); font-weight: 500; margin: 0 0 4px;">
         Listado de Pases
       </h1>
       <p style="color: grey; margin: 0; font-size: 14px;">
         Historial de pases creados
-      </p>
+      </p> -->
     </div>
     <div class="d-flex justify-center align-center">
       <v-btn prepend-icon="mdi-qrcode" @click="dialog = true">
