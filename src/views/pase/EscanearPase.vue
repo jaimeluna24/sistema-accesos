@@ -53,11 +53,10 @@ onMounted(async () => {
           try {
             const url = new URL(texto)
 
-            // valida que sea tu dominio
             const dominiosValidos = [
               'localhost',
               'tuapp.ngrok.io',
-              '192.168.1.47',
+              '192.168.1.40',
               'sistemoon.duckdns.org'
             ]
 

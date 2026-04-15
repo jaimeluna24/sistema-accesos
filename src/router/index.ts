@@ -9,6 +9,8 @@ import Usuarios from "../views/usuarios/Usuarios.vue"
 import DetallePase from "../views/pase/DetallePase.vue"
 import SinPermisos from "../views/auth/SinPermisos.vue"
 import Registros from "../views/registros/Registros.vue"
+import PaseInvalido from "../views/pase/PaseInvalido.vue"
+import Detalles from "../views/pase/Detalles.vue"
 
 import { useAuthStore } from "../services/authService"
 const RUTA_POR_ROL: Record<string, string> = {
@@ -57,10 +59,21 @@ const routes: RouteRecordRaw[] = [
         meta: { roles: ['administrador', 'guardia'] }
       },
       {
+        path: "pase-invalido",
+        name: "PaseInvalido",
+        component: PaseInvalido,
+      },
+      {
         path: "detalle-pase/:id",
         name: "DetallePase",
         component: DetallePase,
         meta: { roles: ['administrador', 'guardia', 'lector', 'gestor', 'normal'] }
+      },
+      {
+        path: "detalle/:id",
+        name: "Detalles",
+        component: Detalles,
+        meta: { roles: ['administrador', 'lector', 'gestor', 'normal'] }
       },
       {
         path: "usuarios",

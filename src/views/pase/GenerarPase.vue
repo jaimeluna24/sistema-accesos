@@ -6,7 +6,9 @@ import { VForm } from 'vuetify/components'
 import { usePaseStore } from '../../services/paseService'
 import { onMounted } from 'vue'
 import QrModal from '../../components/QRModal.vue'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const form = ref<InstanceType<typeof VForm> | null>(null)
 
 const { smAndDown } = useDisplay()
@@ -75,6 +77,12 @@ const generarPase = async () => {
   } catch (e: any) {
     console.log('error response:', e.response)
     errorMsg.value = e.response?.data?.message || 'Error al crear el pase'
+    text.value = errorMsg.value || 'Error al crear el pase'
+    titleAlert.value = 'Error'
+    typeAlert.value = 'error'
+    typeIconAlert.value = '$error'
+    snackbar.value = true
+    loading.value = false
   } finally {
     loading.value = false
   }
@@ -146,7 +154,7 @@ const pasesPaginados = computed(() => {
 
 <template>
   <div class="d-flex justify-space-between p-20">
-    <div style="padding: 12px 16px; margin-top: 15px;">
+    <div style="padding: 12px 16px; margin-top: 10px;">
       <!-- <h1 style="font-size: clamp(18px, 4vw, 26px); font-weight: 500; margin: 0 0 4px;">
         Listado de Pases
       </h1>
@@ -154,11 +162,7 @@ const pasesPaginados = computed(() => {
         Historial de pases creados
       </p> -->
     </div>
-    <div class="d-flex justify-center align-center">
-      <v-btn prepend-icon="mdi-qrcode" @click="dialog = true">
-        Generar
-      </v-btn>
-    </div>
+
     <v-dialog v-model="dialog" max-width="600" persistent>
       <v-card prepend-icon="mdi-qrcode" title="Generar Pase">
         <v-form ref="form">
@@ -210,6 +214,11 @@ const pasesPaginados = computed(() => {
   </div>
   <div>
     <div v-if="smAndDown" style="padding: 8px;">
+      <div class="d-flex justify-end align-end" style="margin-bottom: 12px;">
+        <v-btn prepend-icon="mdi-qrcode" @click="dialog = true">
+          Generar
+        </v-btn>
+      </div>
       <div v-for="pase in pasesPaginados" :key="pase.id"
         style=" border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;">
 
@@ -226,7 +235,8 @@ const pasesPaginados = computed(() => {
         </div>
 
         <div style="display: flex; justify-content: space-around; gap: 8px; margin-top: 10px;">
-          <v-btn prepend-icon="mdi-information-slab-box" variant="outlined" color="warning" size="small" flex>Ver
+          <v-btn @click="router.push({ name: 'Detalles', params: { id: pase.id } })"
+            prepend-icon="mdi-information-slab-box" variant="outlined" color="warning" size="small" flex>Ver
             detalles</v-btn>
           <v-btn prepend-icon="mdi-qrcode" variant="outlined" color="info" size="small" flex
             @click="mostrarQr(pase.id, pase.codigo)">Ver Código QR</v-btn>
@@ -245,6 +255,9 @@ const pasesPaginados = computed(() => {
 
           <v-text-field v-model="search" density="compact" label="Filtrar por Codigo o Nombre"
             prepend-inner-icon="mdi-magnify" variant="solo-filled" flat hide-details single-line></v-text-field>
+          <v-btn prepend-icon="mdi-qrcode" @click="dialog = true" style="margin-left: 16px;" color="primary">
+            Generar
+          </v-btn>
         </v-card-title>
 
         <v-divider></v-divider>
@@ -259,14 +272,9 @@ const pasesPaginados = computed(() => {
 
           <template v-slot:item.actions="{ item }">
             <div class="d-flex gap-4">
-              <!-- <v-btn 
-                            icon="mdi-pencil" 
-                            size="small" 
-                            color="primary" 
-                            @click="editar(item)"
-                             /> -->
 
-              <v-btn icon="mdi-delete" size="small" color="red" />
+              <v-btn style="margin-right: 4px;" icon="mdi-information-slab-box" size="small" color="warning"
+                @click="router.push({ name: 'Detalles', params: { id: item.id } })" />
               <v-btn icon="mdi-qrcode" size="small" color="black" @click="mostrarQr(item.id, item.codigo)" />
             </div>
           </template>

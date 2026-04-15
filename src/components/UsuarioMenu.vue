@@ -2,7 +2,7 @@
     <v-menu min-width="200px">
         <template v-slot:activator="{ props }">
             <v-btn icon v-bind="props" class="mr-2">
-                <v-avatar color="brown" size="">
+                <v-avatar color="success" size="">
                     <v-icon icon="mdi-account-circle"></v-icon>
                 </v-avatar>
             </v-btn>

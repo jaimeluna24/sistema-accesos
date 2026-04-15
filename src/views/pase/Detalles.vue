@@ -2,48 +2,29 @@
 import { useRoute, useRouter } from 'vue-router'
 import { usePaseStore } from '../../services/paseService'
 import { onMounted } from 'vue'
-import { ref } from 'vue'
-import EntradaSalidaModal from '../../components/EntradaSalidaPase.vue'
 
-const router = useRouter()
 const route = useRoute()
+const router = useRouter()
 const id = route.params.id
-const usuario = JSON.parse(localStorage.getItem('user') || '{}')
-const creado_por = ref(usuario.id ? parseInt(usuario.id) : 0)
-const modalDialog = ref(false)
-const paseSeleccionado = ref<string | null>(null)
-const codigoSeleccionado = ref<string | null>(null)
-const tipoSeleccionado = ref<string | null>(null)
-const usuarioSeleccionado = ref<number | null>(null)
+
 const paseStore = usePaseStore()
 
 onMounted(async () => {
  await paseStore.fetchPase(id as string)
-
-  if (paseStore.paseDetalle!.status == false) {
-      router.push({ name: 'PaseInvalido' })
-  }
 })
 
-function mostrarModalEntrada(tipo: string) {
-  paseSeleccionado.value = paseStore.paseDetalle?.id || null
-  codigoSeleccionado.value = paseStore.paseDetalle?.codigo || null
-  tipoSeleccionado.value = tipo
-  usuarioSeleccionado.value = creado_por.value
-  modalDialog.value = true
-}
 
 </script>
 
 <template>
-  <div v-if="paseStore.paseDetalle?.status == true">
-    <div style="padding: 12px 16px; margin-top: 15px;">
+
+    <div style="padding: 12px 16px; margin-top: 20px;">
   <h1 style="font-size: clamp(18px, 4vw, 26px); font-weight: 500; margin: 0 0 4px;">
     Detalles de pase
   </h1>
-  <p style="color: grey; margin: 0; font-size: 14px;">
+  <!-- <p style="color: grey; margin: 0; font-size: 14px;">
     Por favor registre el Ingreso/Salida 
-  </p>
+  </p> -->
 </div>
 
     <div>
@@ -84,23 +65,10 @@ function mostrarModalEntrada(tipo: string) {
           <v-divider />
           <v-card-actions>
             <v-spacer />
-            <v-btn text="Marcar Salida" color="error" variant="tonal" @click="mostrarModalEntrada('salida')"  />
-            <v-btn color="success" text="Marcar Entrada" variant="tonal" @click="mostrarModalEntrada('entrada')" />
+            <v-btn text="Regresar" color="primary" variant="flat" @click="router.push({name: 'GenerarPase'})"  />
           </v-card-actions>
         </v-form>
     </div>
-<EntradaSalidaModal v-model="modalDialog" :pase-id="paseSeleccionado" :tipo="tipoSeleccionado" :usuario-id="usuarioSeleccionado" :codigo="codigoSeleccionado" />
-  </div>
-
-  <div v-else>
-  <v-skeleton-loader
-    class="mx-auto"
-    elevation="1"
-    max-width="360"
-    type="card-avatar, article, actions"
-    boilerplate
-  ></v-skeleton-loader>
-  </div>
 
 </template>
 

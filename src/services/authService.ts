@@ -19,17 +19,24 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => !!token.value)
 
-  async function login(credentials: LoginCredentials) {
+ async function login(credentials: LoginCredentials) {
+  try {
     const { data } = await loginApi(credentials)
     token.value = data.token
-    user.value  = data.user
+    user.value = data.user
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
-
-    const rol = data.user?.rol.toLocaleLowerCase()
+    const rol = data.user?.rol.toLowerCase()
     const ruta = RUTA_POR_ROL[rol] ?? '/no-autorizado'
-    router.push(ruta)
+    await router.push(ruta)
+  } catch (error) {
+    token.value = null
+    user.value = null
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
+    throw error
   }
+}
 
   function logout() {
     token.value = null

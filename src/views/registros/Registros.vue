@@ -41,7 +41,7 @@ const headers = [
     value: (item: any) => formatearFecha(item.created_at)
   },
 
-  { title: 'Acciones', key: 'actions', sortable: false }
+  // { title: 'Acciones', key: 'actions', sortable: false }
 ]
 
 const paginaActual = ref(1)
@@ -78,10 +78,10 @@ const registrosPaginados = computed(() => {
           </v-chip>
         </div>
 
-        <div style="display: flex; justify-content: space-around; gap: 8px; margin-top: 10px;">
+        <!-- <div style="display: flex; justify-content: space-around; gap: 8px; margin-top: 10px;">
           <v-btn prepend-icon="mdi-information-slab-box" variant="outlined" color="warning" size="small" flex>Ver
             detalles</v-btn>
-        </div>
+        </div> -->
       </div>
 
       <v-pagination v-model="paginaActual" :length="totalPaginas" density="compact" />
@@ -106,12 +106,12 @@ const registrosPaginados = computed(() => {
                 {{ item.tipo }}</v-chip>
             </div>
           </template>
-          <template v-slot:item.actions="{ }">
+          <!-- <template v-slot:item.actions="{ }">
             <div class="d-flex gap-4">
               <v-btn prepend-icon="mdi-information-slab-box" variant="outlined" color="orange" size="small" flex>Ver
                 detalles</v-btn>
             </div>
-          </template>
+          </template> -->
         </v-data-table>
       </v-card>
     </div>

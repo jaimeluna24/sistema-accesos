@@ -135,7 +135,7 @@ const usuariosPaginados = computed(() => {
       </p>
     </div>
     <div class="d-flex justify-center align-center">
-      <v-btn prepend-icon="mdi-qrcode" @click="dialog = true">
+      <v-btn color="primary" prepend-icon="mdi-qrcode" @click="dialog = true">
         Crear
       </v-btn>
     </div>
@@ -205,7 +205,7 @@ const usuariosPaginados = computed(() => {
       <v-card flat>
         <v-card-title class="d-flex align-center pe-2">
           <v-icon icon="mdi-video-input-component"></v-icon> &nbsp;
-          Registro de Pases
+          Listado de Usuarios
 
           <v-spacer></v-spacer>
 

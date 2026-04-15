@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { useDisplay } from 'vuetify'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import BarChart from '../../components/charts/BarChart.vue';
 import DoughnutChart from '../../components/charts/DoughnutChart.vue';
+import { useStatsStore } from '../../services/dashboardService'
 const { smAndDown } = useDisplay()
 
 const colorPrincipal = ref('#FB8C00')
 const colorSecundario = ref('#1976D2')
 const colorTercero = ref('#0a873f')
 const colorCuarto = ref('#FF5252')
+
+const statsStore = useStatsStore()
+
+onMounted(() => {
+  statsStore.fetchPasesStats()
+  statsStore.fetchRegistrosStats()
+})
 
 
 
@@ -34,7 +42,7 @@ const colorCuarto = ref('#FF5252')
                   Pases Totales
                 </div>
                 <div class="text-title-large mb-1">
-                  96
+                  {{ statsStore.pasesStats?.totalPases || 0 }}
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
@@ -50,7 +58,7 @@ const colorCuarto = ref('#FF5252')
                   Registros de pases totales
                 </div>
                 <div class="text-title-large mb-1">
-                  398
+                  {{ statsStore.registrosStats?.totalRegistros || 0 }}
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
@@ -66,7 +74,7 @@ const colorCuarto = ref('#FF5252')
                   Cantidad de Entradas
                 </div>
                 <div class="text-title-large mb-1">
-                  234
+                  {{ statsStore.registrosStats?.registrosEntrada || 0 }}
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
@@ -83,7 +91,7 @@ const colorCuarto = ref('#FF5252')
                   Cantidad de Salidas
                 </div>
                 <div class="text-title-large mb-1">
-                  129
+                  {{ statsStore.registrosStats?.registrosSalida || 0 }}
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
@@ -114,7 +122,7 @@ const colorCuarto = ref('#FF5252')
                   Pases Totales
                 </div>
                 <div class="text-title-large mb-1">
-                  96
+                  {{ statsStore.pasesStats?.totalPases || 0 }}
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
@@ -130,7 +138,8 @@ const colorCuarto = ref('#FF5252')
                   Registros de pases totales
                 </div>
                 <div class="text-title-large mb-1">
-                  398
+                  {{ statsStore.registrosStats?.totalRegistros || 0 }}
+                  
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
@@ -146,7 +155,8 @@ const colorCuarto = ref('#FF5252')
                   Cantidad de Entradas
                 </div>
                 <div class="text-title-large mb-1">
-                  234
+                    {{ statsStore.registrosStats?.registrosEntrada || 0 }}
+
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
@@ -163,7 +173,7 @@ const colorCuarto = ref('#FF5252')
                   Cantidad de Salidas
                 </div>
                 <div class="text-title-large mb-1">
-                  129
+                  {{ statsStore.registrosStats?.registrosSalida || 0 }}
                 </div>
                 <div class="text-body-small">Greyhound divisely hello coldly fonwderfully</div>
               </div>
