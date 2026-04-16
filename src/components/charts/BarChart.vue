@@ -1,19 +1,15 @@
 <template>
-    <div style="width: 100%; height: 300px;">  <!-- ← controla la altura aquí -->
-        <Bar 
-            :key="isDark ? 'dark' : 'light'" 
-            id="my-chart-id" 
-            :options="chartOptions" 
-            :data="chartData" 
-            style="width: 100%; height: 100%;"
-        />
+    <div style="width: 100%; height: 300px;"> <!-- ← controla la altura aquí -->
+        <Bar :key="isDark ? 'dark' : 'light'" id="my-chart-id" :options="chartOptions" :data="chartData"
+            style="width: 100%; height: 100%;" />
     </div>
 </template>
 
 <script lang="ts">
 import { Bar } from "vue-chartjs";
 import { useTheme } from "vuetify";
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
+import { useStatsStore } from "../../services/dashboardService";
 import {
     Chart as ChartJS,
     Title,
@@ -23,7 +19,7 @@ import {
     CategoryScale,
     LinearScale,
 } from "chart.js";
-import { rawDailyData, toBarChartData } from './BarChart'
+import { toBarChartData } from './BarChart'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
@@ -33,6 +29,11 @@ export default {
     setup() {
         const theme = useTheme();
         const isDark = computed(() => theme.global.current.value.dark);
+        const statsStore = useStatsStore();
+
+        onMounted(async () => {
+            await statsStore.fetchDataStats()
+        })
 
         const textColor = computed(() => isDark.value ? '#E5E7EB' : '#1a1b1e');
         const gridColor = computed(() => isDark.value ? '#374151' : '#E5E7EB');
@@ -42,7 +43,7 @@ export default {
             position: "relative",
         }));
 
-       const chartData = computed(() => toBarChartData(rawDailyData))
+        const chartData = computed(() => toBarChartData(statsStore.dailyData));
 
         const chartOptions = computed(() => ({
             responsive: false,
@@ -75,12 +76,12 @@ export default {
             },
             scales: {
                 x: {
-                    ticks: { color: textColor.value }, 
-                    grid: { color: gridColor.value },  
+                    ticks: { color: textColor.value },
+                    grid: { color: gridColor.value },
                 },
                 y: {
-                    ticks: { color: textColor.value },   
-                    grid: { color: gridColor.value },      
+                    ticks: { color: textColor.value },
+                    grid: { color: gridColor.value },
                 },
             },
         }));

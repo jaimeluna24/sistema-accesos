@@ -9,6 +9,11 @@
         </template>
         <v-card>
             <v-card-text>
+            <div style="display: flex; justify-content: center;">
+                    <ModoOscuro />
+                </div>
+                    <v-divider class="my-3"></v-divider>
+
                 <div class="mx-auto text-center">
                     <v-avatar color="brown">
                         <v-icon icon="mdi-account-circle"></v-icon>
@@ -17,11 +22,9 @@
                     <p class="text-body-small mt-1" style="text-transform: uppercase;">{{ usuario.departamento }}; {{ usuario.rol }}</p>
                     <p class="text-body-small mt-1" style="text-transform: uppercase;"></p>
                     <v-divider class="my-3"></v-divider>
-                    <v-btn variant="text" rounded @click="logout()">Cerrar Sesión</v-btn>
+                    <v-btn variant="text" style="font-weight: 600;" rounded @click="logout()">Cerrar Sesión</v-btn>
                 </div>
-                <div style="display: flex; justify-content: center;">
-                    <ModoOscuro />
-                </div>
+                
 
             </v-card-text>
         </v-card>

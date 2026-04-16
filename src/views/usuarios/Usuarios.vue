@@ -27,7 +27,6 @@ const departamentoStore = useDepartamentoStore();
 
 
 const loading = ref(false)
-const errorMsg = ref<string | null>(null)
 
 const snackbar = ref(false)
 const text = ref('')
@@ -60,7 +59,6 @@ const crearUsuario = async () => {
   const { valid } = await form.value.validate()
   if (!valid) return
 
-  errorMsg.value = null
   loading.value = true
 
   const dataUsuario: UsuarioData = {
@@ -79,16 +77,20 @@ const crearUsuario = async () => {
       typeIconAlert.value = '$success'
       snackbar.value = true
       dialog.value = false
+      form.value.reset()
       await usuarioStore.fetchUsuarios()
+    } else {
+      titleAlert.value = 'Error'
+      typeAlert.value = 'error'
+      typeIconAlert.value = '$error'
+      text.value = result!.message || 'Error al crear el usuario'
+      snackbar.value = true
     }
-
   } catch (e: any) {
     titleAlert.value = 'Error'
     typeAlert.value = 'error'
     typeIconAlert.value = '$error'
     text.value = e.response?.data?.message || 'Error al crear el usuario'
-    console.log('error response:', e.response)
-    errorMsg.value = e.response?.data?.message || 'Error al crear el usuario'
   } finally {
     loading.value = false
   }
@@ -101,8 +103,8 @@ const cancelar = () => {
 }
 
 const headers = [
-  { title: 'Usuario', key: 'nombre_usuario' },
-  { title: 'Rol', key: 'roles.nombre' },
+  { title: 'Nombre deUsuario', key: 'nombre_usuario' },
+  { title: 'Rol del Usuario', key: 'roles.nombre' },
   { title: 'Departamento', key: 'departamento.nombre_depto' },
   { title: 'Estado', key: 'status' },
   {
@@ -110,7 +112,7 @@ const headers = [
     key: 'fecha',
     value: (item: any) => formatearFecha(item.created_at)
   },
-  { title: 'Acciones', key: 'actions', sortable: false }
+  // { title: 'Acciones', key: 'actions', sortable: false }
 ]
 
 const paginaActual = ref(1)
@@ -192,11 +194,11 @@ const usuariosPaginados = computed(() => {
           </v-chip>
         </div>
 
-        <div style="display: flex; justify-content: space-around; gap: 8px; margin-top: 10px;">
+        <!-- <div style="display: flex; justify-content: space-around; gap: 8px; margin-top: 10px;">
           <v-btn prepend-icon="mdi-information-slab-box" variant="outlined" color="warning" size="small" flex>Ver
             detalles</v-btn>
-          <!-- <v-btn prepend-icon="mdi-qrcode" variant="outlined" color="info" size="small" flex @click="mostrarQr(pase.id, pase.codigo)">Ver Código QR</v-btn> -->
-        </div>
+          <v-btn prepend-icon="mdi-qrcode" variant="outlined" color="info" size="small" flex @click="mostrarQr(pase.id, pase.codigo)">Ver Código QR</v-btn>
+        </div> -->
       </div>
 
       <v-pagination v-model="paginaActual" :length="totalPaginas" density="compact" />
@@ -217,6 +219,14 @@ const usuariosPaginados = computed(() => {
         <v-data-table v-model:search="search" :items="usuarioStore.usuarios" :loading="usuarioStore.loading"
           :headers="headers">
 
+          <template #headers="{ columns }">
+            <tr>
+              <th v-for="column in columns" :key="column.key!" class="font-weight-bold">
+                {{ column.title }}
+              </th>
+            </tr>
+          </template>
+
           <template v-slot:item.status="{ item }">
             <div class="text-start">
               <v-chip :color="item.activo ? 'green' : 'red'" :text="item.activo ? 'Activo' : 'Inactivo'"
@@ -224,19 +234,19 @@ const usuariosPaginados = computed(() => {
             </div>
           </template>
 
-          <template v-slot:item.actions="{  }">
+          <!-- <template v-slot:item.actions="{ }">
             <div class="d-flex gap-4">
               <v-btn prepend-icon="mdi-information-slab-box" variant="outlined" color="warning" size="small" flex>Ver
                 detalles</v-btn>
             </div>
-          </template>
+          </template> -->
 
         </v-data-table>
       </v-card>
 
     </div>
-    <v-snackbar location="bottom end" :color="typeAlert" :prepended-icon="typeIconAlert" :title="titleAlert" v-model="snackbar"
-      :timeout="timeout">
+    <v-snackbar location="bottom end" :color="typeAlert" :prepended-icon="typeIconAlert" :title="titleAlert"
+      v-model="snackbar" :timeout="timeout">
       {{ text }}
 
       <template v-slot:actions>

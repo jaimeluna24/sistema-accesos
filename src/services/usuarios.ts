@@ -30,6 +30,7 @@ export const useUsuarioStore = defineStore('usuarios', () => {
         return { success: true, message: nuevo.message }
       } catch (e: any) {
         error.value = e.response?.data?.error || 'Error al crear el usuario'
+        console.log('Error al crear el usuario:', error.value)
         return { success: false, message: error.value }
       } finally {
         loading.value = false

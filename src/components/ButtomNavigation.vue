@@ -10,6 +10,7 @@
         value="Dashboard"
         icon
          exact
+          v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'"
       >
         <v-icon>mdi-chart-bar-stacked</v-icon>
         <span>Dashboard</span>
@@ -20,6 +21,7 @@
         value="Registros"
         icon
          exact
+          v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor'"
       >
         <v-icon>mdi-history</v-icon>
         <span>Registros</span>
@@ -31,6 +33,7 @@
         value="EscanearPase"
         icon
         exact
+        v-if="usuario.rol == 'administrador' || usuario.rol == 'guardia'"
       >
         <v-icon>mdi-qrcode-scan</v-icon>
         <span>Escanear</span>
@@ -42,6 +45,7 @@
         value="GenerarPase"
         icon
          exact
+         v-if="usuario.rol == 'administrador' || usuario.rol == 'lector' || usuario.rol == 'gestor' || usuario.rol == 'normal'"
       >
         <v-icon>mdi-qrcode</v-icon>
         <span>Generar Pase</span>
@@ -53,6 +57,7 @@
         value="Usuarios"
         icon
         exact
+         v-if="usuario.rol == 'administrador'"
       >
         <v-icon>mdi-account-group</v-icon>
         <span>Usuarios</span>
@@ -67,6 +72,7 @@ import { useRoute } from 'vue-router'
 
 const active = ref('Dashboard')
 const route = useRoute()
+const usuario = JSON.parse(localStorage.getItem('user') || '{}')
 
 watch(
   () => route.matched[route.matched.length - 1]?.name,

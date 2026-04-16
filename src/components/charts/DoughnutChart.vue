@@ -14,15 +14,17 @@ import { useTheme } from 'vuetify'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
 import { rawAccessData, toChartData } from './DoughnutChart'
+import { useStatsStore } from '../../services/dashboardService'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
+const statsStore = useStatsStore()
 const theme = useTheme()
 const isDark = computed(() => theme.global.current.value.dark)
 
 const textColor = computed(() => isDark.value ? '#E5E7EB' : '#1a1b1e')
 
-const chartData = computed(() => toChartData(rawAccessData))
+const chartData = computed(() => toChartData(statsStore.accessData))
 
 const chartOptions = computed(() => ({
     responsive: true,
