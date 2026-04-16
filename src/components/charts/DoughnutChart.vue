@@ -13,7 +13,7 @@ import { computed } from 'vue'
 import { useTheme } from 'vuetify'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
-import { rawAccessData, toChartData } from './DoughnutChart'
+import { toChartData } from './DoughnutChart'
 import { useStatsStore } from '../../services/dashboardService'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
